@@ -6,6 +6,9 @@ var mkdirp      = require('mkdirp');
 var captain     = require(path.resolve('node_modules/sails/node_modules/captains-log'));
 var buildShipFn = require(path.resolve('node_modules/sails/lib/hooks/logger/ship'));
 
+// Default log levels to match captains log
+var logLevels   = { error: 0, warn: 1, debug: 2, info: 3, verbose: 4, silly: 5 };
+
 module.exports = function(sails) {
   return {
     ready: false,
@@ -33,7 +36,7 @@ module.exports = function(sails) {
       };
 
       // Console Transport
-      logger = new winston.Logger({transports: [new winston.transports.Console(consoleOptions)]});
+      logger = new winston.Logger({levels: sails.config.log.logLevels || logLevels, transports: [new winston.transports.Console(consoleOptions)]});
 
       // DailyRotateFile Transport
       if (sails.config.log.dailyRotate) {
